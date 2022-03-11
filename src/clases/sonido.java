@@ -18,7 +18,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public class sonido extends Thread{
     
-    private String[] sonidos = {"/sounds/puerta.wav", "/sounds/elevador.wav", "/sounds/level.wav"};
+    private String[] sonidos = {"/sonidos/sonido1.wav", "/sounds/elevador.wav", "/sounds/level.wav"};
     public enum tiposonido {SECONDS, HOURS, HOURS12};
     private int sonidoseleccionado;
     

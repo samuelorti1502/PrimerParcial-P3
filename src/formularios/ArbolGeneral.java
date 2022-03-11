@@ -5,6 +5,7 @@
  */
 package formularios;
 
+import clases.sonido;
 import clases.txtDinamico;
 import java.awt.Image;
 import java.util.logging.Level;
@@ -12,6 +13,11 @@ import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 /**
  *
@@ -22,19 +28,23 @@ public class ArbolGeneral extends javax.swing.JFrame {
     /**
      * Creates new form ArbolGeneral
      */
-    
     private JLabel titulo;
-    
+
     private ImageIcon Img;
     private Icon icono;
-    
+
     public ArbolGeneral() {
+        sonido soundClass = new sonido();
+        soundClass = new sonido();
+        soundClass.tiposonido(0);
+        soundClass.start();
+
         initComponents();
         GUI();
     }
-    
-    public void GUI(){
-        
+
+    public void GUI() {
+
         // <editor-fold defaultstate="collapsed" desc="Escudo UMG">
         titulo = new JLabel();
         titulo.setSize(140, 140);
@@ -48,7 +58,7 @@ public class ArbolGeneral extends javax.swing.JFrame {
         titulo.setVisible(true);
         pnlTitulo.add(titulo, 0);
         // </editor-fold> 
-        
+
         // <editor-fold defaultstate="collapsed" desc="Texto dinamico">
         String mensaje = "BIENVENIDO AL ARBOL DEL PRIMER PARCIAL 2022 ";
         txtDinamico texto = null;
@@ -76,16 +86,16 @@ public class ArbolGeneral extends javax.swing.JFrame {
         lblTexto = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
+        jtArbol = new javax.swing.JTree();
         jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        lblValor = new javax.swing.JLabel();
+        txtValor = new javax.swing.JTextField();
+        btnAgregar = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
-        jButton5 = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -129,33 +139,46 @@ public class ArbolGeneral extends javax.swing.JFrame {
 
         jPanel1.setLayout(new java.awt.GridLayout(1, 0, 15, 15));
 
-        jScrollPane1.setViewportView(jTree1);
+        jScrollPane1.setViewportView(jtArbol);
 
         jPanel1.add(jScrollPane1);
 
         jPanel2.setLayout(new java.awt.GridLayout(8, 1, 15, 15));
+        jPanel2.add(lblValor);
 
-        jLabel2.setText("jLabel2");
-        jPanel2.add(jLabel2);
+        txtValor.setToolTipText("Escriba lo que quiere agregar al árbol");
+        jPanel2.add(txtValor);
 
-        jTextField1.setText("jTextField1");
-        jPanel2.add(jTextField1);
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnAgregar);
 
-        jButton1.setText("jButton1");
-        jPanel2.add(jButton1);
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnEditar);
 
-        jButton2.setText("jButton2");
-        jPanel2.add(jButton2);
+        btnEliminar.setText("Eliminar");
+        jPanel2.add(btnEliminar);
 
-        jButton3.setText("jButton3");
-        jPanel2.add(jButton3);
-
-        jButton4.setText("jButton4");
-        jPanel2.add(jButton4);
+        btnBuscar.setText("Buscar");
+        jPanel2.add(btnBuscar);
         jPanel2.add(jSeparator1);
 
-        jButton5.setText("jButton5");
-        jPanel2.add(jButton5);
+        btnLimpiar.setText("Limpiar arbol");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnLimpiar);
 
         jPanel1.add(jPanel2);
 
@@ -183,6 +206,82 @@ public class ArbolGeneral extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        try {
+            DefaultTreeModel modeloArbol = (DefaultTreeModel) jtArbol.getModel();
+            modeloArbol.setRoot(null);
+
+            JOptionPane.showMessageDialog(null, "Se ha limpiado el árbol");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error en funcion btnLimpiarActionPerformed(): " + ex.getMessage());
+        }
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        
+        try {
+            TreeSelectionModel tsm = jtArbol.getSelectionModel();
+
+            if (tsm.getSelectionCount() > 0) {
+                DefaultMutableTreeNode nodoSeleccionado = (DefaultMutableTreeNode) jtArbol.getSelectionPath().getLastPathComponent();
+
+                DefaultMutableTreeNode nodoNuevo = new DefaultMutableTreeNode(txtValor.getText());
+                nodoSeleccionado.add(nodoNuevo);
+
+                TreePath rutaNodo = new TreePath(nodoSeleccionado.getPath());
+
+                DefaultTreeModel modeloArbol = (DefaultTreeModel) jtArbol.getModel();
+                modeloArbol.reload();
+
+                jtArbol.setSelectionPath(rutaNodo);
+                jtArbol.expandPath(rutaNodo);
+                //txtConsola.setText(txtConsola.getText() + "Nodo agregado: " + txtValor.getText() + " en: " +  rutaNodo.toString() + System.lineSeparator());
+
+            } else {
+                if (txtValor.getText().length() <= 0) {
+                    throw new Exception("El valor no puede estar en blanco, por favor ingresa algo");
+                }
+
+                DefaultMutableTreeNode nodoRaiz = new DefaultMutableTreeNode(txtValor.getText());
+                DefaultTreeModel modeloArbol = (DefaultTreeModel) jtArbol.getModel();
+                modeloArbol.setRoot(nodoRaiz);
+
+                //txtConsola.setText(txtConsola.getText() + "Nodo RAÍZ agregado: " + txtValor.getText() + System.lineSeparator());
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+            //txtConsola.setText(txtConsola.getText() + "Error en btnAgregarActionPerformed(): " + ex.getMessage() + System.lineSeparator());
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        try{
+            TreeSelectionModel tsm = jtArbol.getSelectionModel();
+            if(tsm.getSelectionCount() <= 0)
+                throw new Exception("Ningún nodo seleccionado, para editar debes seleccionar uno");
+            
+            if (txtValor.getText().length() <= 0)
+                throw new Exception("El valor no puede estar en blanco, por favor ingresa algo");
+            
+            DefaultMutableTreeNode nodoSeleccionado = (DefaultMutableTreeNode) jtArbol.getSelectionPath().getLastPathComponent();
+            nodoSeleccionado.setUserObject(txtValor.getText());
+            
+            TreePath rutaNodo = new TreePath(nodoSeleccionado.getPath());
+
+            DefaultTreeModel modeloArbol = (DefaultTreeModel) jtArbol.getModel();
+            modeloArbol.reload();
+
+            jtArbol.setSelectionPath(rutaNodo);
+            jtArbol.expandPath(rutaNodo);
+
+            //txtConsola.setText(txtConsola.getText() + "Nodo modificado, nuevo valor: " + txtValor.getText() + " en: " +  rutaNodo.toString() + System.lineSeparator());
+                
+        }catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }     
+    }//GEN-LAST:event_btnEditarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -220,20 +319,20 @@ public class ArbolGeneral extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnLimpiar;
     private javax.swing.JPanel jPanel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTree jTree1;
+    private javax.swing.JTree jtArbol;
     private javax.swing.JLabel lblTexto;
+    private javax.swing.JLabel lblValor;
     private javax.swing.JPanel pnlTitulo;
+    private javax.swing.JTextField txtValor;
     // End of variables declaration//GEN-END:variables
 }
