@@ -79,7 +79,6 @@ public class ArbolGeneral extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         pnlTitulo = new javax.swing.JPanel();
         jPanel = new javax.swing.JPanel();
@@ -166,6 +165,11 @@ public class ArbolGeneral extends javax.swing.JFrame {
         jPanel2.add(btnEditar);
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnEliminar);
 
         btnBuscar.setText("Buscar");
@@ -219,7 +223,7 @@ public class ArbolGeneral extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        
+
         try {
             TreeSelectionModel tsm = jtArbol.getSelectionModel();
 
@@ -256,17 +260,19 @@ public class ArbolGeneral extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        try{
+        try {
             TreeSelectionModel tsm = jtArbol.getSelectionModel();
-            if(tsm.getSelectionCount() <= 0)
+            if (tsm.getSelectionCount() <= 0) {
                 throw new Exception("Ningún nodo seleccionado, para editar debes seleccionar uno");
-            
-            if (txtValor.getText().length() <= 0)
+            }
+
+            if (txtValor.getText().length() <= 0) {
                 throw new Exception("El valor no puede estar en blanco, por favor ingresa algo");
-            
+            }
+
             DefaultMutableTreeNode nodoSeleccionado = (DefaultMutableTreeNode) jtArbol.getSelectionPath().getLastPathComponent();
             nodoSeleccionado.setUserObject(txtValor.getText());
-            
+
             TreePath rutaNodo = new TreePath(nodoSeleccionado.getPath());
 
             DefaultTreeModel modeloArbol = (DefaultTreeModel) jtArbol.getModel();
@@ -276,12 +282,34 @@ public class ArbolGeneral extends javax.swing.JFrame {
             jtArbol.expandPath(rutaNodo);
 
             //txtConsola.setText(txtConsola.getText() + "Nodo modificado, nuevo valor: " + txtValor.getText() + " en: " +  rutaNodo.toString() + System.lineSeparator());
-                
-        }catch(Exception ex)
-        {
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
-        }     
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        try {
+            TreeSelectionModel tsm = jtArbol.getSelectionModel();
+            if (tsm.getSelectionCount() <= 0) {
+                throw new Exception("¡Ningún nodo para eliminar!");
+            }
+
+            DefaultMutableTreeNode nodoSeleccionado = (DefaultMutableTreeNode) jtArbol.getSelectionPath().getLastPathComponent();
+
+            TreePath rutaNodo = new TreePath(nodoSeleccionado.getPath());
+
+            DefaultTreeModel modeloArbol = (DefaultTreeModel) jtArbol.getModel();
+            modeloArbol.removeNodeFromParent(nodoSeleccionado);
+            modeloArbol.reload();
+
+            jtArbol.setSelectionPath(rutaNodo);
+            jtArbol.expandPath(rutaNodo);
+
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
      * @param args the command line arguments
