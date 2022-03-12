@@ -5,9 +5,12 @@
  */
 package formularios;
 
+import clases.Reloj;
 import clases.sonido;
 import clases.txtDinamico;
+import java.awt.Color;
 import java.awt.Image;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -32,15 +35,23 @@ public class ArbolGeneral extends javax.swing.JFrame {
 
     private ImageIcon Img;
     private Icon icono;
+    
+    Reloj reloj = new Reloj();
 
     public ArbolGeneral() {
         sonido soundClass = new sonido();
         soundClass = new sonido();
         soundClass.tiposonido(0);
         soundClass.start();
-
+        
         initComponents();
         GUI();
+        
+        reloj.setLblReloj(lblReloj);
+        reloj.start();
+
+        lblReloj.setBackground(Color.black);
+        lblReloj.setOpaque(true);
     }
 
     public void GUI() {
@@ -70,6 +81,9 @@ public class ArbolGeneral extends javax.swing.JFrame {
         }
         texto.start();
         // </editor-fold>  
+        
+        ImageIcon icon = new ImageIcon(getClass().getResource("/images/tree.png"));
+        this.setIconImage(icon.getImage());
     }
 
     /**
@@ -83,6 +97,7 @@ public class ArbolGeneral extends javax.swing.JFrame {
         pnlTitulo = new javax.swing.JPanel();
         jPanel = new javax.swing.JPanel();
         lblTexto = new javax.swing.JLabel();
+        lblReloj = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtArbol = new javax.swing.JTree();
@@ -97,6 +112,7 @@ public class ArbolGeneral extends javax.swing.JFrame {
         btnLimpiar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Arbol");
 
         pnlTitulo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         pnlTitulo.setPreferredSize(new java.awt.Dimension(788, 160));
@@ -120,6 +136,13 @@ public class ArbolGeneral extends javax.swing.JFrame {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
+        lblReloj.setBackground(new java.awt.Color(0, 0, 0));
+        lblReloj.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        lblReloj.setForeground(new java.awt.Color(102, 255, 0));
+        lblReloj.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblReloj.setText("00:00:00");
+        lblReloj.setBorder(new javax.swing.border.MatteBorder(null));
+
         javax.swing.GroupLayout pnlTituloLayout = new javax.swing.GroupLayout(pnlTitulo);
         pnlTitulo.setLayout(pnlTituloLayout);
         pnlTituloLayout.setHorizontalGroup(
@@ -128,16 +151,52 @@ public class ArbolGeneral extends javax.swing.JFrame {
                 .addGap(184, 184, 184)
                 .addComponent(jPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(185, Short.MAX_VALUE))
+            .addGroup(pnlTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTituloLayout.createSequentialGroup()
+                    .addContainerGap(618, Short.MAX_VALUE)
+                    .addComponent(lblReloj, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
         );
         pnlTituloLayout.setVerticalGroup(
             pnlTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTituloLayout.createSequentialGroup()
                 .addComponent(jPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(pnlTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlTituloLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(lblReloj, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(95, Short.MAX_VALUE)))
         );
 
         jPanel1.setLayout(new java.awt.GridLayout(1, 0, 15, 15));
 
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("A");
+        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("B");
+        javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("E");
+        javax.swing.tree.DefaultMutableTreeNode treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("K");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("L");
+        treeNode3.add(treeNode4);
+        treeNode2.add(treeNode3);
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("F");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("C");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("G");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("D");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("H");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("M");
+        treeNode3.add(treeNode4);
+        treeNode2.add(treeNode3);
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("I");
+        treeNode2.add(treeNode3);
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("J");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        jtArbol.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jScrollPane1.setViewportView(jtArbol);
 
         jPanel1.add(jScrollPane1);
@@ -173,6 +232,11 @@ public class ArbolGeneral extends javax.swing.JFrame {
         jPanel2.add(btnEliminar);
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnBuscar);
         jPanel2.add(jSeparator1);
 
@@ -311,6 +375,44 @@ public class ArbolGeneral extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try{
+            
+            if(txtValor.getText().length() <= 0)
+                throw new Exception("¡Ingrese un valor!");
+            
+            if(jtArbol.getModel().getRoot() == null)
+                throw new Exception("¡El árbol está vacío!");
+            
+            DefaultMutableTreeNode nodoEncontrado = null;
+            DefaultMutableTreeNode nodoRaiz = (DefaultMutableTreeNode) jtArbol.getModel().getRoot();
+            
+            for (Enumeration e = nodoRaiz.depthFirstEnumeration(); e.hasMoreElements() && nodoEncontrado == null;) 
+            {
+                DefaultMutableTreeNode nodo = (DefaultMutableTreeNode) e.nextElement();                
+                if (txtValor.getText().equals(nodo.getUserObject().toString())) {
+                    nodoEncontrado = nodo;
+                }
+            }
+            
+            if(nodoEncontrado == null)
+            {
+                JOptionPane.showMessageDialog(null, "El valor no existe en el árbol");
+                return;
+            }
+            
+            TreePath rutaNodo = new TreePath(nodoEncontrado.getPath());
+            jtArbol.setSelectionPath(rutaNodo);
+            jtArbol.expandPath(rutaNodo);
+
+            //txtConsola.setText(txtConsola.getText() + "Nodo buscado " + nodoEncontrado.getUserObject().toString() + " en: " +  rutaNodo.toString() + System.lineSeparator());
+                
+        }catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -358,6 +460,7 @@ public class ArbolGeneral extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTree jtArbol;
+    private javax.swing.JLabel lblReloj;
     private javax.swing.JLabel lblTexto;
     private javax.swing.JLabel lblValor;
     private javax.swing.JPanel pnlTitulo;
