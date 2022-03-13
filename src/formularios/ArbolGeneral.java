@@ -281,14 +281,6 @@ public class ArbolGeneral extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    public nodoArbol nodoIzq() {
-        return root.izq;
-    }
-
-    public nodoArbol nodoDer() {
-        return root.der;
-    }
-
     public static int valorNodo() {
         return nodoArbol.valor;
     }
@@ -306,22 +298,97 @@ public class ArbolGeneral extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
 
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Object());
+
+        DefaultTreeModel modelo = new DefaultTreeModel(root);
+        jtArbol.setModel(modelo);
+
         desdeCadena(txtValor.getText());
 
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     public void desdeCadena(String cadena) {
+        //DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+
         ArrayList<String> lista = new ArrayList<String>();
-        
+        //DefaultMutableTreeNode node = root;
+
         lista.add(txtValor.getText());
-        
+
+        DefaultTreeModel modelo = null;
+
         for (String s : lista) {
             String[] tmp = s.split(" \\(");
-            for (int i = 0; i < tmp.length; i++) {
-                String string = tmp[i];
-                System.out.println("string = " + string);
+
+            DefaultMutableTreeNode root = new DefaultMutableTreeNode(tmp[0]);
+            modelo = new DefaultTreeModel(root);
+            DefaultMutableTreeNode node = root;
+            jtArbol.setModel(modelo);
+
+            System.out.println("raiz = " + tmp[0]);
+
+            DefaultMutableTreeNode nodoEncontrado = null;
+            DefaultMutableTreeNode nodoRaiz = (DefaultMutableTreeNode) jtArbol.getModel().getRoot();
+
+            for (Enumeration e = nodoRaiz.depthFirstEnumeration(); e.hasMoreElements() && nodoEncontrado == null;) {
+                DefaultMutableTreeNode nodo = (DefaultMutableTreeNode) e.nextElement();
+                if (tmp[0].equals(nodo.getUserObject().toString())) {
+                    nodoEncontrado = nodo;
+
+                    for (int i = 0; i < tmp.length; i++) {
+                        if (i != 0) {
+                            String string = tmp[i];
+                            nuevoHijo(tmp[i]);
+                            DefaultMutableTreeNode nodoNuevo = new DefaultMutableTreeNode(string);
+                            nodoEncontrado.add(nodoNuevo);
+                        }
+                    }
+
+                    TreePath rutaNodo = new TreePath(nodoEncontrado.getPath());
+
+                    DefaultTreeModel modeloArbol = (DefaultTreeModel) jtArbol.getModel();
+                    modeloArbol.reload();
+
+                }
+            }
+
+            if (nodoEncontrado == null) {
+                JOptionPane.showMessageDialog(null, "El valor no existe en el árbol");
+                return;
+            }
+
+            /*for (int i = 0; i < tmp.length; i++) {
+                if (i != 0) {
+                    String string = tmp[i];
+                    
+                    node = new DefaultMutableTreeNode(string);
+                    int index = childIndex(node, tmp[i]);
+                    
+                    System.out.println("string = " + string + " index " + index);
+                }
+
+            }*/
+        }
+        //jtArbol.setModel(modelo);
+    }
+
+    public void nuevoHijo(String hijo){
+        System.out.println("hijo = " + hijo);
+    }
+    
+    private int childIndex(final DefaultMutableTreeNode node, final String childValue) {
+        Enumeration<DefaultMutableTreeNode> children = node.children();
+        DefaultMutableTreeNode child = null;
+        int index = -1;
+
+        while (children.hasMoreElements() && index < 0) {
+            child = children.nextElement();
+
+            if (child.getUserObject() != null && childValue.equals(child.getUserObject())) {
+                index = node.getIndex(child);
             }
         }
+        return index;
     }
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed

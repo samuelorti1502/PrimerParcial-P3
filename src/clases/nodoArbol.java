@@ -1,9 +1,4 @@
 package clases;
-
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-
 /**
  *
  * @author Samuel David Ortiz
@@ -14,10 +9,8 @@ public class nodoArbol {
     private nodoArbol padre;
     public nodoArbol hijo[];
     public int noHijos;
-    private final int maxHijos = 10;
+    private final int maxHijos = 20;
 
-    public nodoArbol der;
-    public nodoArbol izq;
     public static int valor;
     public nodoArbol p;
 
@@ -44,16 +37,6 @@ public class nodoArbol {
         return noHijos;
     }
     
-    public void agregarHijos(){
-        if (noHijos != 0) {
-            System.out.println("hijo -> " + hijo[0]);
-            for (int i = 1; i < noHijos; i++) {
-                System.out.println("hijo2 -> " + hijo[i]);
-            }
-        }
-        
-    }
-
     public String toString() {
 
         String res = data;
@@ -73,7 +56,7 @@ public class nodoArbol {
     public void AddChild(nodoArbol node) {
 
         if (noHijos < maxHijos) {
-            // Can add child
+
             node.padre = this;
             hijo[noHijos] = node;
             noHijos++;
