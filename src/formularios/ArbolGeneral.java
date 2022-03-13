@@ -306,159 +306,21 @@ public class ArbolGeneral extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
 
-        System.out.println("Hola");
-        
-        //root = root.GetChild(0);
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("ROOT");
+        desdeCadena(txtValor.getText());
 
-        DefaultTreeModel modelo = new DefaultTreeModel(root);
-        jtArbol.setModel(modelo);
-
-        ArrayList<String> listOfPaths = new ArrayList<String>();
-        //listOfPaths.add("A/D/E/Node 4");
-        listOfPaths.add(txtValor.getText());
-
-        for (String s : listOfPaths) {
-            //String[] tmp = s.split("/");
-            //buildTreeFromString(modelo, s);
-            desdeCadena("A (B (E (K, L), F), C (G), D (H (M), I, J))");
-            //this.root.agregarHijos();
-            System.out.println(GetListDefinition());
-        }
-
-        //buildTreeFromString(modelo, "A/D/E/Node 4");
-
-        /*try {
-            TreeSelectionModel tsm = jtArbol.getSelectionModel();
-
-            if (tsm.getSelectionCount() > 0) {
-                DefaultMutableTreeNode nodoSeleccionado = (DefaultMutableTreeNode) jtArbol.getSelectionPath().getLastPathComponent();
-
-                DefaultMutableTreeNode nodoNuevo = new DefaultMutableTreeNode(txtValor.getText());
-                nodoSeleccionado.add(nodoNuevo);
-
-                TreePath rutaNodo = new TreePath(nodoSeleccionado.getPath());
-
-                DefaultTreeModel modeloArbol = (DefaultTreeModel) jtArbol.getModel();
-                modeloArbol.reload();
-
-                jtArbol.setSelectionPath(rutaNodo);
-                jtArbol.expandPath(rutaNodo);
-                //txtConsola.setText(txtConsola.getText() + "Nodo agregado: " + txtValor.getText() + " en: " +  rutaNodo.toString() + System.lineSeparator());
-
-            } else {
-                if (txtValor.getText().length() <= 0) {
-                    throw new Exception("El valor no puede estar en blanco, por favor ingresa algo");
-                }
-
-                DefaultMutableTreeNode nodoRaiz = new DefaultMutableTreeNode(txtValor.getText());
-                DefaultTreeModel modeloArbol = (DefaultTreeModel) jtArbol.getModel();
-                modeloArbol.setRoot(nodoRaiz);
-
-                //txtConsola.setText(txtConsola.getText() + "Nodo RAÍZ agregado: " + txtValor.getText() + System.lineSeparator());
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-            //txtConsola.setText(txtConsola.getText() + "Error en btnAgregarActionPerformed(): " + ex.getMessage() + System.lineSeparator());
-        }*/
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     public void desdeCadena(String cadena) {
-        int inicio = 0;
-
-        nodoArbol actual = new nodoArbol(cadena);
-        root = actual;
-        nodoArbol r = actual;
-
-        for (int i = 0; i < cadena.length() && root != null; i++) {
-            char val = cadena.charAt(i);
-
-            if (val == '(' || val == ')' || val == ',') {
-                if (inicio != i) {
-                    String name = cadena.substring(inicio, i);
-                    System.out.println("name = " + name);
-
-                    nodoArbol nodo = new nodoArbol(name);
-                    actual.AddChild(nodo);
-
-                    DefaultMutableTreeNode raiz = new DefaultMutableTreeNode(name);
-
-                    DefaultTreeModel modelo = new DefaultTreeModel(raiz);
-
-                    if (val == '(') {
-                        actual = nodo;
-                        jtArbol.setModel(modelo);
-                    } else if (val == ')') {
-                        actual = actual.GetParent();
-                    }
-                    inicio = i + 1;
-
-                }
-                //root = root.GetChild(0);
-            }
-        }
-    }
-
-    public String GetListDefinition() {
-        return "(" + root.toString() + " ) ";
-    }
-
-    private void buildTreeFromString(final DefaultTreeModel model, final String str) {
-        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+        ArrayList<String> lista = new ArrayList<String>();
         
-        String[] strings = str.split(",");
-        DefaultMutableTreeNode node = root;
-        for (String s : strings) {
-            int index = childIndex(node, s);
-            if (index < 0) {
-                DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(s);
-                node.insert(newChild, node.getChildCount());
-                node = newChild;
-            } else {
-                node = (DefaultMutableTreeNode) node.getChildAt(index);
+        lista.add(txtValor.getText());
+        
+        for (String s : lista) {
+            String[] tmp = s.split(" \\(");
+            for (int i = 0; i < tmp.length; i++) {
+                String string = tmp[i];
+                System.out.println("string = " + string);
             }
-        }
-    }
-
-    private int childIndex(final DefaultMutableTreeNode node, final String childValue) {
-        Enumeration<DefaultMutableTreeNode> children = node.children();
-        DefaultMutableTreeNode child = null;
-        int index = -1;
-
-        while (children.hasMoreElements() && index < 0) {
-            child = children.nextElement();
-
-            if (child.getUserObject() != null
-                    && childValue.equals(child.getUserObject())) {
-                index = node.getIndex(child);
-            }
-        }
-        return index;
-    }
-
-    private static void put(TreeMap structure, String root, String rest) {
-        String[] tmp = rest.split(",", 2);
-
-        TreeMap rootDir = (TreeMap) structure.get(root);
-
-        if (rootDir == null) {
-            rootDir = new TreeMap();
-            structure.put(root, rootDir);
-        }
-        if (tmp.length == 1) { // path end
-            rootDir.put(tmp[0], null);
-        } else {
-            put(rootDir, tmp[0], tmp[1]);
-        }
-    }
-
-    private static void print(TreeMap map, String delimeter) {
-        if (map == null || map.isEmpty()) {
-            return;
-        }
-        for (Object m : map.entrySet()) {
-            System.out.println(delimeter + "-" + ((Map.Entry) m).getKey());
-            print((TreeMap) ((Map.Entry) m).getValue(), " |" + delimeter);
         }
     }
 
