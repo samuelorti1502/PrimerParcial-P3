@@ -306,6 +306,8 @@ public class ArbolGeneral extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
 
+        System.out.println("Hola");
+        
         //root = root.GetChild(0);
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("ROOT");
 
