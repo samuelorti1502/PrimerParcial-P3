@@ -6,11 +6,15 @@
 package formularios;
 
 import clases.Reloj;
+import clases.nodoArbol;
 import clases.sonido;
 import clases.txtDinamico;
 import java.awt.Color;
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -35,18 +39,20 @@ public class ArbolGeneral extends javax.swing.JFrame {
 
     private ImageIcon Img;
     private Icon icono;
-    
+    private nodoArbol root;
+
     Reloj reloj = new Reloj();
 
     public ArbolGeneral() {
+        //this.root = root.GetChild(0);
         sonido soundClass = new sonido();
         soundClass = new sonido();
         soundClass.tiposonido(0);
         soundClass.start();
-        
+
         initComponents();
         GUI();
-        
+
         reloj.setLblReloj(lblReloj);
         reloj.start();
 
@@ -81,7 +87,7 @@ public class ArbolGeneral extends javax.swing.JFrame {
         }
         texto.start();
         // </editor-fold>  
-        
+
         ImageIcon icon = new ImageIcon(getClass().getResource("/images/tree.png"));
         this.setIconImage(icon.getImage());
     }
@@ -275,6 +281,18 @@ public class ArbolGeneral extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    public nodoArbol nodoIzq() {
+        return root.izq;
+    }
+
+    public nodoArbol nodoDer() {
+        return root.der;
+    }
+
+    public static int valorNodo() {
+        return nodoArbol.valor;
+    }
+
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
         try {
             DefaultTreeModel modeloArbol = (DefaultTreeModel) jtArbol.getModel();
@@ -288,7 +306,27 @@ public class ArbolGeneral extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
 
-        try {
+        //root = root.GetChild(0);
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("ROOT");
+
+        DefaultTreeModel modelo = new DefaultTreeModel(root);
+        jtArbol.setModel(modelo);
+
+        ArrayList<String> listOfPaths = new ArrayList<String>();
+        //listOfPaths.add("A/D/E/Node 4");
+        listOfPaths.add(txtValor.getText());
+
+        for (String s : listOfPaths) {
+            //String[] tmp = s.split("/");
+            //buildTreeFromString(modelo, s);
+            desdeCadena("A (B (E (K, L), F), C (G), D (H (M), I, J))");
+            //this.root.agregarHijos();
+            System.out.println(GetListDefinition());
+        }
+
+        //buildTreeFromString(modelo, "A/D/E/Node 4");
+
+        /*try {
             TreeSelectionModel tsm = jtArbol.getSelectionModel();
 
             if (tsm.getSelectionCount() > 0) {
@@ -320,8 +358,107 @@ public class ArbolGeneral extends javax.swing.JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
             //txtConsola.setText(txtConsola.getText() + "Error en btnAgregarActionPerformed(): " + ex.getMessage() + System.lineSeparator());
-        }
+        }*/
     }//GEN-LAST:event_btnAgregarActionPerformed
+
+    public void desdeCadena(String cadena) {
+        int inicio = 0;
+
+        nodoArbol actual = new nodoArbol(cadena);
+        root = actual;
+        nodoArbol r = actual;
+
+        for (int i = 0; i < cadena.length() && root != null; i++) {
+            char val = cadena.charAt(i);
+
+            if (val == '(' || val == ')' || val == ',') {
+                if (inicio != i) {
+                    String name = cadena.substring(inicio, i);
+                    System.out.println("name = " + name);
+
+                    nodoArbol nodo = new nodoArbol(name);
+                    actual.AddChild(nodo);
+
+                    DefaultMutableTreeNode raiz = new DefaultMutableTreeNode(name);
+
+                    DefaultTreeModel modelo = new DefaultTreeModel(raiz);
+
+                    if (val == '(') {
+                        actual = nodo;
+                        jtArbol.setModel(modelo);
+                    } else if (val == ')') {
+                        actual = actual.GetParent();
+                    }
+                    inicio = i + 1;
+
+                }
+                //root = root.GetChild(0);
+            }
+        }
+    }
+
+    public String GetListDefinition() {
+        return "(" + root.toString() + " ) ";
+    }
+
+    private void buildTreeFromString(final DefaultTreeModel model, final String str) {
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+        
+        String[] strings = str.split(",");
+        DefaultMutableTreeNode node = root;
+        for (String s : strings) {
+            int index = childIndex(node, s);
+            if (index < 0) {
+                DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(s);
+                node.insert(newChild, node.getChildCount());
+                node = newChild;
+            } else {
+                node = (DefaultMutableTreeNode) node.getChildAt(index);
+            }
+        }
+    }
+
+    private int childIndex(final DefaultMutableTreeNode node, final String childValue) {
+        Enumeration<DefaultMutableTreeNode> children = node.children();
+        DefaultMutableTreeNode child = null;
+        int index = -1;
+
+        while (children.hasMoreElements() && index < 0) {
+            child = children.nextElement();
+
+            if (child.getUserObject() != null
+                    && childValue.equals(child.getUserObject())) {
+                index = node.getIndex(child);
+            }
+        }
+        return index;
+    }
+
+    private static void put(TreeMap structure, String root, String rest) {
+        String[] tmp = rest.split(",", 2);
+
+        TreeMap rootDir = (TreeMap) structure.get(root);
+
+        if (rootDir == null) {
+            rootDir = new TreeMap();
+            structure.put(root, rootDir);
+        }
+        if (tmp.length == 1) { // path end
+            rootDir.put(tmp[0], null);
+        } else {
+            put(rootDir, tmp[0], tmp[1]);
+        }
+    }
+
+    private static void print(TreeMap map, String delimeter) {
+        if (map == null || map.isEmpty()) {
+            return;
+        }
+        for (Object m : map.entrySet()) {
+            System.out.println(delimeter + "-" + ((Map.Entry) m).getKey());
+            print((TreeMap) ((Map.Entry) m).getValue(), " |" + delimeter);
+        }
+    }
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         try {
@@ -369,46 +506,43 @@ public class ArbolGeneral extends javax.swing.JFrame {
             jtArbol.setSelectionPath(rutaNodo);
             jtArbol.expandPath(rutaNodo);
 
-
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        try{
-            
-            if(txtValor.getText().length() <= 0)
+        try {
+
+            if (txtValor.getText().length() <= 0) {
                 throw new Exception("¡Ingrese un valor!");
-            
-            if(jtArbol.getModel().getRoot() == null)
+            }
+
+            if (jtArbol.getModel().getRoot() == null) {
                 throw new Exception("¡El árbol está vacío!");
-            
+            }
+
             DefaultMutableTreeNode nodoEncontrado = null;
             DefaultMutableTreeNode nodoRaiz = (DefaultMutableTreeNode) jtArbol.getModel().getRoot();
-            
-            for (Enumeration e = nodoRaiz.depthFirstEnumeration(); e.hasMoreElements() && nodoEncontrado == null;) 
-            {
-                DefaultMutableTreeNode nodo = (DefaultMutableTreeNode) e.nextElement();                
+
+            for (Enumeration e = nodoRaiz.depthFirstEnumeration(); e.hasMoreElements() && nodoEncontrado == null;) {
+                DefaultMutableTreeNode nodo = (DefaultMutableTreeNode) e.nextElement();
                 if (txtValor.getText().equals(nodo.getUserObject().toString())) {
                     nodoEncontrado = nodo;
                 }
             }
-            
-            if(nodoEncontrado == null)
-            {
+
+            if (nodoEncontrado == null) {
                 JOptionPane.showMessageDialog(null, "El valor no existe en el árbol");
                 return;
             }
-            
+
             TreePath rutaNodo = new TreePath(nodoEncontrado.getPath());
             jtArbol.setSelectionPath(rutaNodo);
             jtArbol.expandPath(rutaNodo);
 
             //txtConsola.setText(txtConsola.getText() + "Nodo buscado " + nodoEncontrado.getUserObject().toString() + " en: " +  rutaNodo.toString() + System.lineSeparator());
-                
-        }catch(Exception ex)
-        {
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
